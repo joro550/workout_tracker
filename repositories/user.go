@@ -8,6 +8,7 @@ import (
 type User struct {
 	Username string
 	Password string
+	Id       int
 }
 
 type UserRepository struct {

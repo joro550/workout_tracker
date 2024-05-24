@@ -7,7 +7,8 @@ func (cu create_users) Run() string {
     CREATE TABLE IF NOT EXISTS users (
         Id integer primary key autoincrement,
         Username varchar(250),
-        Password varchar(250)
+        Password varchar(250), 
+        SessionId varchar(20)
     )
     `
 }

@@ -32,7 +32,7 @@ func main() {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 
-	endpoints.Init(router, db)
+	endpoints.RegisterUserEndpoints(router, db)
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		component := layouts.Main()
