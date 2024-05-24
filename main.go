@@ -33,6 +33,7 @@ func main() {
 	router.Use(middleware.Logger)
 
 	endpoints.RegisterUserEndpoints(router, db)
+	endpoints.RegisterProfileEndpoints(router, db)
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		component := layouts.Main()

@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 )
 
@@ -36,11 +37,39 @@ func (ur *UserRepository) UserExists(userName string) (bool, error) {
 	return len(usernames) > 0, nil
 }
 
-func (ur *UserRepository) CreateUser(model User) (bool, error) {
-	_, err := ur.db.Exec("INSERT INTO users (username, password) VALUES (?,?)", model.Username, model.Password)
+func (ur *UserRepository) GetUser(userName string) (User, error) {
+	rows, err := ur.db.Query("SELECT id, username, password from users where username = ?", userName)
 	if err != nil {
-		log.Println("🤔 [CreateUser] query failed", err)
-		return false, err
+		log.Println("[GetUser] query failed", err)
+		return User{}, err
 	}
-	return true, nil
+
+	users := []User{}
+	for rows.Next() {
+		var user User
+		rows.Scan(&user.Id, &user.Username, &user.Password)
+		users = append(users, user)
+	}
+
+	if len(users) > 1 {
+		log.Println("More than one user existed with username", userName)
+		return User{}, errors.New("did not expect more than one user in get user query")
+	} else if len(users) == 0 {
+		log.Println("More than one user existed with username", userName)
+		return User{}, errors.New("no users were returned for get user query")
+	}
+
+	return users[0], nil
+}
+
+func (ur *UserRepository) CreateUser(model User) (int, error) {
+	row := ur.db.QueryRow("INSERT INTO users (username, password) VALUES (?,?) returning id", model.Username, model.Password)
+
+	var id int
+	err := row.Scan(&id)
+	if err != nil {
+		return 0, nil
+	}
+
+	return id, nil
 }

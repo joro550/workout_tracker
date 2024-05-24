@@ -19,36 +19,28 @@ func RegisterUserEndpoints(mux *chi.Mux, db *sql.DB) {
 
 	mux.Route("/user", func(router chi.Router) {
 		router.Get("/login", login)
-		router.Post("/login", loginUser)
+		router.Post("/login", loginUser(&userRepo))
 
-		router.Get("/register", register)
-		router.Post("/register", registerUser(userRepo))
-	})
-
-	mux.Route("/profile", func(r chi.Router) {
-		r.Use(AuthCtx)
-		r.Get("/", profile)
+		router.Get("/register", register(pages.RegisterModel{}))
+		router.Post("/register", registerUser(&userRepo))
 	})
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
-	login := pages.Login(false)
+	login := pages.Login(pages.LoginModel{})
 	page := layouts.Layout(login)
 	page.Render(r.Context(), w)
+}
 
-	cookie, err := r.Cookie("auth")
-	if err == nil {
-		log.Println(cookie.Value)
+func register(model pages.RegisterModel) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		registerView := pages.Register(model)
+		layout := layouts.Layout(registerView)
+		layout.Render(r.Context(), w)
 	}
 }
 
-func register(w http.ResponseWriter, r *http.Request) {
-	registerView := pages.Register(false)
-	layout := layouts.Layout(registerView)
-	layout.Render(r.Context(), w)
-}
-
-func registerUser(repo repositories.UserRepository) func(w http.ResponseWriter, r *http.Request) {
+func registerUser(repo *repositories.UserRepository) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
@@ -56,14 +48,13 @@ func registerUser(repo repositories.UserRepository) func(w http.ResponseWriter, 
 		exists, err := repo.UserExists(username)
 		if err != nil {
 			log.Println("🤔 Query failed", err)
-			register(w, r)
+			register(pages.RegisterModel{})(w, r)
 			return
 		}
 
 		if exists {
-			registerView := pages.Register(true)
-			layout := layouts.Layout(registerView)
-			layout.Render(r.Context(), w)
+			view := register(pages.RegisterModel{UserExists: true})
+			view(w, r)
 			return
 		}
 
@@ -73,37 +64,43 @@ func registerUser(repo repositories.UserRepository) func(w http.ResponseWriter, 
 			Password: string(encPass),
 		}
 
-		token, _ := createUserCookie(&user)
+		id, _ := repo.CreateUser(user)
+		log.Println("👶 Id for new user was", id)
+		token, _ := createUserCookie(id, &user)
 		http.SetCookie(w, &http.Cookie{Value: token, Name: "jwt", Path: "/"})
 		repo.CreateUser(user)
 	}
 }
 
-func profile(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("hello"))
-}
+func loginUser(repo *repositories.UserRepository) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		username := r.FormValue("username")
+		password := r.FormValue("password")
 
-func loginUser(w http.ResponseWriter, r *http.Request) {
-	log.Println("setting cookie")
-	username := r.FormValue("username")
-	user := repositories.User{
-		Username: username,
+		exists, _ := repo.UserExists(username)
+		if !exists {
+			login(w, r)
+			return
+		}
+
+		user, _ := repo.GetUser(username)
+		hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+		passwordCorrect := bcrypt.CompareHashAndPassword([]byte(user.Password), hash)
+		if passwordCorrect != nil {
+			login(w, r)
+			return
+		}
+
+		token, _ := createUserCookie(user.Id, &user)
+		http.SetCookie(w, &http.Cookie{Value: token, Name: "jwt", Path: "/"})
+		http.Redirect(w, r, "profile", http.StatusFound)
 	}
-
-	token, _ := createUserCookie(&user)
-	http.SetCookie(w, &http.Cookie{Value: token, Name: "jwt", Path: "/"})
-	w.Write([]byte("Hello"))
 }
 
 func AuthCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Println("🔐 auth")
 		cookieString, err := r.Cookie("jwt")
-
-		for _, cookie := range r.Cookies() {
-			log.Println("name: [", cookie.Name, "]")
-		}
-
 		if err != nil {
 			w.WriteHeader(http.StatusForbidden)
 			log.Println("no cookie", cookieString, err)
@@ -118,18 +115,20 @@ func AuthCtx(next http.Handler) http.Handler {
 		}
 
 		claims := auth.PrivateClaims()
-		id := claims["id"]
-		log.Println("userid: ", id)
 
-		ctx := context.WithValue(r.Context(), "user", "thing")
+		// this just wants to be a float64
+		id := int(claims["id"].(float64))
+		username := claims["username"].(string)
+
+		ctx := context.WithValue(r.Context(), "user", repositories.User{Id: id, Username: username})
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
-func createUserCookie(user *repositories.User) (string, error) {
+func createUserCookie(id int, user *repositories.User) (string, error) {
 	auth := createAuthToken()
 
-	claims := map[string]interface{}{"id": user.Id, "username": user.Username}
+	claims := map[string]interface{}{"id": id, "username": user.Username}
 	_, tokenString, err := auth.Encode(claims)
 	return tokenString, err
 }

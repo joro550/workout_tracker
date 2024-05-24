@@ -10,7 +10,7 @@ import "context"
 import "io"
 import "bytes"
 
-func Login(hasError bool) templ.Component {
+func Login(model LoginModel) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -23,7 +23,17 @@ func Login(hasError bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form class=\"section\" method=\"post\"><div class=\"field\"><label class=\"label\">Username</label><div class=\"control\"><input class=\"input\" text=\"Username\"></div></div><div class=\"field\"><label class=\"label\">Password</label><div class=\"control\"><input class=\"input\" text=\"Password\"></div></div><div class=\"field is-grouped\"><div class=\"control\"><button class=\"button is-link is-light\">Login</button></div><div class=\"control\"><a href=\"/user/register\" class=\"button is-link\">Register</a></div></div></form>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form class=\"section\" method=\"post\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if model.Error {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"notification is-danger\">User with that username all ready exists</div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"field\"><label class=\"label\">Username</label><div class=\"control\"><input class=\"input\" text=\"Username\"></div></div><div class=\"field\"><label class=\"label\">Password</label><div class=\"control\"><input class=\"input\" text=\"Password\"></div></div><div class=\"field is-grouped\"><div class=\"control\"><button class=\"button is-link is-light\">Login</button></div><div class=\"control\"><a href=\"/user/register\" class=\"button is-link\">Register</a></div></div></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -34,7 +44,7 @@ func Login(hasError bool) templ.Component {
 	})
 }
 
-func Register(usernameExists bool) templ.Component {
+func Register(model RegisterModel) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -47,7 +57,17 @@ func Register(usernameExists bool) templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form class=\"section\" method=\"post\"><div class=\"notification is-danger\">User with that username all ready exists</div><div class=\"field\"><label class=\"label\">Username</label><div class=\"control\"><input class=\"input\" name=\"username\" text=\"Username\"></div></div><div class=\"field\"><label class=\"label\">Password</label><div class=\"control\"><input class=\"input\" name=\"password\" text=\"Password\"></div></div><div class=\"field is-grouped\"><div class=\"control\"><button class=\"button is-link\">Register</button></div></div></form>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form class=\"section\" method=\"post\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if model.UserExists {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"notification is-danger\">User with that username all ready exists</div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"field\"><label class=\"label\">Username</label><div class=\"control\"><input class=\"input\" name=\"username\" text=\"Username\"></div></div><div class=\"field\"><label class=\"label\">Password</label><div class=\"control\"><input class=\"input\" name=\"password\" text=\"Password\"></div></div><div class=\"field is-grouped\"><div class=\"control\"><button class=\"button is-link\">Register</button></div></div></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
