@@ -7,12 +7,32 @@ templ Profile() {
 				@menu()
 			</div>
 			<div class="column">
+				<div class="section">
+					@graph()
+				</div>
 				for i:=0; i< 100; i++ {
 					@card()
 				}
 			</div>
 		</div>
 	</div>
+}
+
+templ graph() {
+	<table class="table is-narrow">
+		<thead></thead>
+		<tbody>
+			for day := 0; day < 7; day ++ {
+				<tr>
+					for i := 0; i< 52; i ++ {
+						<td style="border: none;" class="pt-0 pb-0 pr-1 pl-1">
+							<span class="color-swatch has-background-white rounded"></span>
+						</td>
+					}
+				</tr>
+			}
+		</tbody>
+	</table>
 }
 
 templ card() {
