@@ -7,7 +7,8 @@ func (cu create_list) Run() string {
     CREATE TABLE IF NOT EXISTS list (
         Id integer primary key autoincrement,
         Name varchar(200),
-        Descriptioin varchar(200)
+        Description varchar(200),
+        UserId INT
     )
     `
 }

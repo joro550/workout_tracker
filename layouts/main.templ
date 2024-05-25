@@ -12,6 +12,7 @@ templ Layout(content templ.Component) {
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
 			<title>Hello Bulma!</title>
 			<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"/>
+			<script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
 			<style>
         .color-swatch {
             display: inline-block;
@@ -89,4 +90,31 @@ templ nav() {
 			</div>
 		</div>
 	</nav>
+}
+
+templ Menu() {
+	<aside class="menu">
+		<p class="menu-label">General</p>
+		<ul class="menu-list">
+			<li><a href="/profile">Lists</a></li>
+		</ul>
+		<p class="menu-label">Administration</p>
+		<ul class="menu-list">
+			<li><a href="/list/add">Add List</a></li>
+			<li><a>Edit Account</a></li>
+		</ul>
+	</aside>
+}
+
+templ Authed(view templ.Component) {
+	<div class="section">
+		<div class="columns">
+			<div class="column is-one-quarter">
+				@Menu()
+			</div>
+			<div class="column">
+				@view
+			</div>
+		</div>
+	</div>
 }

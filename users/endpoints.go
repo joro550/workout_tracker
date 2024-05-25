@@ -41,10 +41,8 @@ func register(model user_pages.RegisterModel) func(w http.ResponseWriter, r *htt
 
 func registerUser(repo *UserRepository) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username := r.FormValue("username")
-		password := r.FormValue("password")
-
-		exists, err := repo.UserExists(username)
+		userLogin := user_pages.UserLoginFromRequest(r)
+		exists, err := repo.UserExists(userLogin.Username)
 		if err != nil {
 			log.Println("🤔 Query failed", err)
 			register(user_pages.RegisterModel{})(w, r)
@@ -57,9 +55,9 @@ func registerUser(repo *UserRepository) func(w http.ResponseWriter, r *http.Requ
 			return
 		}
 
-		encPass, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+		encPass, _ := bcrypt.GenerateFromPassword([]byte(userLogin.Password), bcrypt.DefaultCost)
 		user := User{
-			Username: username,
+			Username: userLogin.Username,
 			Password: string(encPass),
 		}
 
@@ -68,6 +66,7 @@ func registerUser(repo *UserRepository) func(w http.ResponseWriter, r *http.Requ
 		token, _ := createUserCookie(id, &user)
 		http.SetCookie(w, &http.Cookie{Value: token, Name: "jwt", Path: "/"})
 		repo.CreateUser(user)
+		http.Redirect(w, r, "/profile", http.StatusFound)
 	}
 }
 
@@ -92,7 +91,7 @@ func loginUser(repo *UserRepository) func(w http.ResponseWriter, r *http.Request
 
 		token, _ := createUserCookie(user.Id, &user)
 		http.SetCookie(w, &http.Cookie{Value: token, Name: "jwt", Path: "/"})
-		http.Redirect(w, r, "profile", http.StatusFound)
+		http.Redirect(w, r, "/profile", http.StatusFound)
 	}
 }
 

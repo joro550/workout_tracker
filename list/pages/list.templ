@@ -1,5 +1,7 @@
 package list_pages
 
+import "fmt"
+
 templ Cards(models []CardModel) {
 	for _, card := range models {
 		<div class="card">
@@ -17,26 +19,59 @@ templ Cards(models []CardModel) {
 				</div>
 			</div>
 			<footer class="card-footer">
-				<a href="#" class="card-footer-item">Save</a>
+				<a href="#" class="card-footer-item">View</a>
 				<a href="#" class="card-footer-item">Edit</a>
-				<a href="#" class="card-footer-item">Delete</a>
+				<a hx-delete={ fmt.Sprintf("/list/%v", card.Id) } class="card-footer-item">Delete</a>
 			</footer>
 		</div>
 	}
 }
 
+templ UpdateableCards(models []CardModel) {
+	<div hx-trigger="list-updated from:body" hx-get="/list/cards">
+		@Cards(models)
+	</div>
+}
+
 templ AddList() {
-	<form class="section" method="post">
+	<h1>Create List</h1>
+	<hr/>
+	<form method="post">
 		<div class="field">
 			<label class="label">Name</label>
 			<div class="control">
-				<input class="input" text="Name"/>
+				<input class="input" name="name" text="Name"/>
 			</div>
 		</div>
 		<div class="field">
 			<label class="label">Description</label>
 			<div class="control">
-				<textarea class="textarea" placeholder="Description of the list"></textarea>
+				<textarea class="textarea" name="description" placeholder="Description of the list"></textarea>
+			</div>
+		</div>
+		<div class="field is-grouped">
+			<div class="control">
+				<button class="button is-link is-light">Create</button>
+			</div>
+		</div>
+	</form>
+}
+
+templ EditList(list CardModel) {
+	<h1>Edit List</h1>
+	<hr/>
+	<form method="post">
+		<input type="hidden" value="{ list.Id }"/>
+		<div class="field">
+			<label class="label">Name</label>
+			<div class="control">
+				<input class="input" name="name" text="Name" value="{ list.Name }"/>
+			</div>
+		</div>
+		<div class="field">
+			<label class="label">Description</label>
+			<div class="control">
+				<textarea class="textarea" name="description" value="{list.Description}" placeholder="Description of the list"></textarea>
 			</div>
 		</div>
 		<div class="field is-grouped">
