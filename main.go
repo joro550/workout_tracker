@@ -9,9 +9,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/joro550/workout_tracker/endpoints"
 	"github.com/joro550/workout_tracker/migrations"
-	"github.com/joro550/workout_tracker/templates/layouts"
+	"github.com/joro550/workout_tracker/profile"
+	"github.com/joro550/workout_tracker/users"
 )
 
 func main() {
@@ -32,13 +32,8 @@ func main() {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 
-	endpoints.RegisterUserEndpoints(router, db)
-	endpoints.RegisterProfileEndpoints(router, db)
-
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		component := layouts.Main()
-		component.Render(r.Context(), w)
-	})
+	users.RegisterUserEndpoints(router, db)
+	profile.RegisterProfileEndpoints(router, db)
 
 	http.ListenAndServe(":8080", router)
 }

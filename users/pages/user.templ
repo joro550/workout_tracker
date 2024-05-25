@@ -1,0 +1,58 @@
+package user_pages
+
+templ Login(model LoginModel) {
+	<form class="section" method="post">
+		if model.Error {
+			<div class="notification is-danger">
+				User with that username all ready exists
+			</div>
+		}
+		<div class="field">
+			<label class="label">Username</label>
+			<div class="control">
+				<input class="input" text="Username"/>
+			</div>
+		</div>
+		<div class="field">
+			<label class="label">Password</label>
+			<div class="control">
+				<input class="input" text="Password"/>
+			</div>
+		</div>
+		<div class="field is-grouped">
+			<div class="control">
+				<button class="button is-link is-light">Login</button>
+			</div>
+			<div class="control">
+				<a href="/user/register" class="button is-link">Register</a>
+			</div>
+		</div>
+	</form>
+}
+
+templ Register(model RegisterModel) {
+	<form class="section" method="post">
+		if model.UserExists {
+			<div class="notification is-danger">
+				User with that username all ready exists
+			</div>
+		}
+		<div class="field">
+			<label class="label">Username</label>
+			<div class="control">
+				<input class="input" name="username" text="Username"/>
+			</div>
+		</div>
+		<div class="field">
+			<label class="label">Password</label>
+			<div class="control">
+				<input class="input" name="password" text="Password"/>
+			</div>
+		</div>
+		<div class="field is-grouped">
+			<div class="control">
+				<button class="button is-link">Register</button>
+			</div>
+		</div>
+	</form>
+}

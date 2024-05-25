@@ -7,4 +7,5 @@ type Migration interface {
 var Migrations = []Migration{
 	create_users{},
 	create_list{},
+	create_task{},
 }
