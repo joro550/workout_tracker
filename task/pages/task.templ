@@ -1,0 +1,63 @@
+package task_pages
+
+templ Add() {
+	<form class="section" method="post">
+		<div class="field">
+			<label class="label">Name</label>
+			<div class="control">
+				<input class="input" text="Name"/>
+			</div>
+		</div>
+		<div class="select">
+			<select>
+				<option>None</option>
+				<option>Weight sets and reps</option>
+				<option>Pace And time</option>
+			</select>
+		</div>
+		<div id="type-reciever">
+			@WeightSetsAndReps()
+		</div>
+		<div class="field is-grouped">
+			<div class="control">
+				<button class="button is-link is-light">Create</button>
+			</div>
+		</div>
+	</form>
+}
+
+templ WeightSetsAndReps() {
+	<div class="field">
+		<label class="label">Weight</label>
+		<div class="control">
+			<input class="input" text="weight"/>
+		</div>
+	</div>
+	<div class="field">
+		<label class="label">Sets</label>
+		<div class="control">
+			<input class="input" text="sets"/>
+		</div>
+	</div>
+	<div class="field">
+		<label class="label">Reps</label>
+		<div class="control">
+			<input class="input" text="reps"/>
+		</div>
+	</div>
+}
+
+templ PaceAndTime() {
+	<div class="field">
+		<label class="label">Pace</label>
+		<div class="control">
+			<input class="input" text="pace"/>
+		</div>
+	</div>
+	<div class="field">
+		<label class="label">Time</label>
+		<div class="control">
+			<input class="input" text="time"/>
+		</div>
+	</div>
+}

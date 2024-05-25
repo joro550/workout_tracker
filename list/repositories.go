@@ -1,4 +1,4 @@
-package profile
+package list
 
 import "database/sql"
 

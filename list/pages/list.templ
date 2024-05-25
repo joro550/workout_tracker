@@ -1,0 +1,48 @@
+package list_pages
+
+templ Cards(models []CardModel) {
+	for _, card := range models {
+		<div class="card">
+			<header class="card-header">
+				<p class="card-header-title">{ card.Name }</p>
+				<button class="card-header-icon" aria-label="more options">
+					<span class="icon">
+						<i class="fas fa-angle-down" aria-hidden="true"></i>
+					</span>
+				</button>
+			</header>
+			<div class="card-content">
+				<div class="content">
+					{ card.Description }
+				</div>
+			</div>
+			<footer class="card-footer">
+				<a href="#" class="card-footer-item">Save</a>
+				<a href="#" class="card-footer-item">Edit</a>
+				<a href="#" class="card-footer-item">Delete</a>
+			</footer>
+		</div>
+	}
+}
+
+templ AddList() {
+	<form class="section" method="post">
+		<div class="field">
+			<label class="label">Name</label>
+			<div class="control">
+				<input class="input" text="Name"/>
+			</div>
+		</div>
+		<div class="field">
+			<label class="label">Description</label>
+			<div class="control">
+				<textarea class="textarea" placeholder="Description of the list"></textarea>
+			</div>
+		</div>
+		<div class="field is-grouped">
+			<div class="control">
+				<button class="button is-link is-light">Create</button>
+			</div>
+		</div>
+	</form>
+}
