@@ -56,6 +56,18 @@ func (tr TaskRepository) GetAllTasks(userId, listId int) ([]Task, error) {
 	return tasks, nil
 }
 
+func (tr TaskRepository) GetTask(taskId, listId, userId int) (Task, error) {
+	rows := tr.db.QueryRow("select id, title, date, value, type, listid, userid from task where userid = ? and listid = ? and id = ? ", userId, listId, taskId)
+
+	var task Task
+	err := rows.Scan(&task.Id, &task.Title, &task.Date, &task.Value, &task.Type, &task.ListId, &task.UserId)
+	if err != nil {
+		log.Println("💥 [GetAllTasks] scan failed", err)
+		return Task{}, err
+	}
+	return task, nil
+}
+
 func (tr TaskRepository) CreateTask(task Task) (int, error) {
 	rows := tr.db.QueryRow(
 		`insert into task (title, date, value, type, listId, userId)
