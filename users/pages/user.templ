@@ -4,19 +4,19 @@ templ Login(model LoginModel) {
 	<form class="section" method="post">
 		if model.Error {
 			<div class="notification is-danger">
-				User with that username all ready exists
+				Error occurred when logging in, are you sure you used the right information?
 			</div>
 		}
 		<div class="field">
 			<label class="label">Username</label>
 			<div class="control">
-				<input class="input" text="Username"/>
+				<input class="input" name="username" text="Username"/>
 			</div>
 		</div>
 		<div class="field">
 			<label class="label">Password</label>
 			<div class="control">
-				<input class="input" text="Password"/>
+				<input class="input" name="password" type="password" text="Password"/>
 			</div>
 		</div>
 		<div class="field is-grouped">
@@ -46,7 +46,7 @@ templ Register(model RegisterModel) {
 		<div class="field">
 			<label class="label">Password</label>
 			<div class="control">
-				<input class="input" name="password" text="Password"/>
+				<input class="input" name="password" type="password" text="Password"/>
 			</div>
 		</div>
 		<div class="field is-grouped">

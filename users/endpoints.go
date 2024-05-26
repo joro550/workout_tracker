@@ -17,7 +17,7 @@ func RegisterUserEndpoints(mux *chi.Mux, db *sql.DB) {
 	userRepo := NewUserRepo(db)
 
 	mux.Route("/user", func(router chi.Router) {
-		router.Get("/login", login)
+		router.Get("/login", login(user_pages.LoginModel{}))
 		router.Post("/login", loginUser(&userRepo))
 
 		router.Get("/register", register(user_pages.RegisterModel{}))
@@ -25,10 +25,12 @@ func RegisterUserEndpoints(mux *chi.Mux, db *sql.DB) {
 	})
 }
 
-func login(w http.ResponseWriter, r *http.Request) {
-	login := user_pages.Login(user_pages.LoginModel{})
-	page := layouts.Layout(login)
-	page.Render(r.Context(), w)
+func login(model user_pages.LoginModel) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		login := user_pages.Login(model)
+		page := layouts.Layout(login)
+		page.Render(r.Context(), w)
+	}
 }
 
 func register(model user_pages.RegisterModel) func(w http.ResponseWriter, r *http.Request) {
@@ -71,20 +73,22 @@ func registerUser(repo *UserRepository) func(w http.ResponseWriter, r *http.Requ
 
 func loginUser(repo *UserRepository) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username := r.FormValue("username")
-		password := r.FormValue("password")
-
-		exists, _ := repo.UserExists(username)
+		userLogin := user_pages.UserLoginFromRequest(r)
+		exists, _ := repo.UserExists(userLogin.Username)
 		if !exists {
-			login(w, r)
+			log.Println("🙈 couldn't find user", userLogin.Username)
+			view := login(user_pages.LoginModel{Error: true})
+			view(w, r)
 			return
 		}
 
-		user, _ := repo.GetUser(username)
-		hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+		user, _ := repo.GetUser(userLogin.Username)
+		hash, _ := bcrypt.GenerateFromPassword([]byte(userLogin.Password), bcrypt.DefaultCost)
 		passwordCorrect := bcrypt.CompareHashAndPassword([]byte(user.Password), hash)
 		if passwordCorrect != nil {
-			login(w, r)
+			log.Println("🙊 password was wrong for user", userLogin.Username)
+			view := login(user_pages.LoginModel{Error: true})
+			view(w, r)
 			return
 		}
 

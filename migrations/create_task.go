@@ -9,7 +9,10 @@ func (cu create_task) Run() string {
         Title varchar(200),
         Date datetime,
         Value varchar(250), 
-        Type int
+
+        Type int,
+        ListId int,
+        UserId int
     )
     `
 }

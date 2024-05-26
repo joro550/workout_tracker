@@ -1,15 +1,45 @@
 package task_pages
 
-templ Add() {
-	<form class="section" method="post">
+templ Add(listId int) {
+	<h1>Add task</h1>
+	<hr/>
+	<form method="post">
 		<div class="field">
-			<label class="label">Name</label>
+			<label class="label">Title</label>
 			<div class="control">
-				<input class="input" text="Name"/>
+				<input class="input" name="title" text="Title"/>
 			</div>
 		</div>
 		<div class="select">
-			<select>
+			<select name="type">
+				<option>None</option>
+				<option>Weight sets and reps</option>
+				<option>Pace And time</option>
+			</select>
+		</div>
+		<div id="type-reciever">
+			@WeightSetsAndReps()
+		</div>
+		<div class="field is-grouped">
+			<div class="control">
+				<button class="button is-link is-light">Create</button>
+			</div>
+		</div>
+	</form>
+}
+
+templ Edit() {
+	<h1>Edit task</h1>
+	<hr/>
+	<form method="post">
+		<div class="field">
+			<label class="label">Title</label>
+			<div class="control">
+				<input class="input" name="title" text="Title"/>
+			</div>
+		</div>
+		<div class="select">
+			<select name="type">
 				<option>None</option>
 				<option>Weight sets and reps</option>
 				<option>Pace And time</option>

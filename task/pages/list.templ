@@ -1,6 +1,8 @@
 package task_pages
 
-templ Cards(models []TaskModel) {
+import "fmt"
+
+templ Cards(listId int, models []TaskModel) {
 	for _, card := range models {
 		<div class="card">
 			<header class="card-header">
@@ -13,13 +15,25 @@ templ Cards(models []TaskModel) {
 			</header>
 			<div class="card-content">
 				<div class="content">
-					{ card.Description }
+					{ card.Value }
 				</div>
 			</div>
+			<footer class="card-footer">
+				<a class="card-footer-item">Edit</a>
+				<a hx-delete={ fmt.Sprintf("/list/%v/task/%v", listId, card.Id) } class="card-footer-item">Delete</a>
+			</footer>
 		</div>
 	}
 }
 
 templ UpdateableTasks(listId int, model []TaskModel) {
-	<div hx-trigger="task-updated from:body"></div>
+	<div hx-trigger="task-updated from:body" hx-get={ fmt.Sprintf("/list/%v/task/cards", listId) }>
+		@Cards(listId, model)
+	</div>
+}
+
+templ ListTasks(list int, tasks []TaskModel) {
+	<a href={ templ.SafeURL(fmt.Sprintf("/list/%v/task/add", list)) } class="button is-primary is-fullwidth">Add</a>
+	<hr/>
+	@UpdateableTasks(list, tasks)
 }

@@ -12,6 +12,7 @@ import (
 	"github.com/joro550/workout_tracker/list"
 	"github.com/joro550/workout_tracker/migrations"
 	"github.com/joro550/workout_tracker/profile"
+	"github.com/joro550/workout_tracker/task"
 	"github.com/joro550/workout_tracker/users"
 )
 
@@ -36,6 +37,7 @@ func main() {
 	users.RegisterUserEndpoints(router, db)
 	profile.RegisterProfileEndpoints(router, db)
 	list.RegisterListEndpoints(router, db)
+	task.RegisterTaskEndpoints(router, db)
 	log.Println("👂 listening")
 
 	http.ListenAndServe(":8080", router)

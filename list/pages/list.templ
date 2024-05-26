@@ -20,7 +20,7 @@ templ Cards(models []CardModel) {
 				</div>
 			</div>
 			<footer class="card-footer">
-				<a href="#" class="card-footer-item">View</a>
+				<a href={ templ.SafeURL(fmt.Sprintf("/list/%v/task", card.Id)) } class="card-footer-item">View</a>
 				<a href={ templ.SafeURL(fmt.Sprintf("/list/%v/edit", card.Id)) } class="card-footer-item">Edit</a>
 				<a hx-delete={ fmt.Sprintf("/list/%v", card.Id) } class="card-footer-item">Delete</a>
 			</footer>
