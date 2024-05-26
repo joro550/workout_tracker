@@ -65,7 +65,6 @@ func registerUser(repo *UserRepository) func(w http.ResponseWriter, r *http.Requ
 		log.Println("👶 Id for new user was", id)
 		token, _ := createUserCookie(id, &user)
 		http.SetCookie(w, &http.Cookie{Value: token, Name: "jwt", Path: "/"})
-		repo.CreateUser(user)
 		http.Redirect(w, r, "/profile", http.StatusFound)
 	}
 }

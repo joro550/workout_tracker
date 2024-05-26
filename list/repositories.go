@@ -33,11 +33,11 @@ func (lr ListRepository) CreateList(model List) (int, error) {
 
 func (lr ListRepository) UpdateList(model List) (bool, error) {
 	_, err := lr.db.Exec(
-		"update list (name, description) values (?,?) where id = ? and userid = ?",
+		"update list set name = ?, description = ? where id = ? and userid = ?",
 		model.Name, model.Description, model.Id, model.UserId,
 	)
 	if err != nil {
-		log.Println("🤔 [UpdateList] query failed to execute")
+		log.Println("🤔 [UpdateList] query failed to execute", err)
 		return false, err
 	}
 

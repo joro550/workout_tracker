@@ -8,7 +8,8 @@ func (cu create_task) Run() string {
         Id integer primary key autoincrement,
         Title varchar(200),
         Date datetime,
-        Value varchar(250)
+        Value varchar(250), 
+        Type int
     )
     `
 }

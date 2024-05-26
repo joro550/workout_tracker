@@ -1,0 +1,25 @@
+package task_pages
+
+templ Cards(models []TaskModel) {
+	for _, card := range models {
+		<div class="card">
+			<header class="card-header">
+				<p class="card-header-title">{ card.Title }</p>
+				<button class="card-header-icon" aria-label="more options">
+					<span class="icon">
+						<i class="fas fa-angle-down" aria-hidden="true"></i>
+					</span>
+				</button>
+			</header>
+			<div class="card-content">
+				<div class="content">
+					{ card.Description }
+				</div>
+			</div>
+		</div>
+	}
+}
+
+templ UpdateableTasks(listId int, model []TaskModel) {
+	<div hx-trigger="task-updated from:body"></div>
+}

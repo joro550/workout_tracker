@@ -1,6 +1,7 @@
 package list_pages
 
 import "fmt"
+import "strconv"
 
 templ Cards(models []CardModel) {
 	for _, card := range models {
@@ -20,7 +21,7 @@ templ Cards(models []CardModel) {
 			</div>
 			<footer class="card-footer">
 				<a href="#" class="card-footer-item">View</a>
-				<a href="#" class="card-footer-item">Edit</a>
+				<a href={ templ.SafeURL(fmt.Sprintf("/list/%v/edit", card.Id)) } class="card-footer-item">Edit</a>
 				<a hx-delete={ fmt.Sprintf("/list/%v", card.Id) } class="card-footer-item">Delete</a>
 			</footer>
 		</div>
@@ -57,21 +58,21 @@ templ AddList() {
 	</form>
 }
 
-templ EditList(list CardModel) {
+templ EditList(list EditCardModel) {
 	<h1>Edit List</h1>
 	<hr/>
 	<form method="post">
-		<input type="hidden" value="{ list.Id }"/>
+		<input type="hidden" name="id" value={ strconv.Itoa(list.Id) }/>
 		<div class="field">
 			<label class="label">Name</label>
 			<div class="control">
-				<input class="input" name="name" text="Name" value="{ list.Name }"/>
+				<input class="input" name="name" text="Name" value={ list.Name }/>
 			</div>
 		</div>
 		<div class="field">
 			<label class="label">Description</label>
 			<div class="control">
-				<textarea class="textarea" name="description" value="{list.Description}" placeholder="Description of the list"></textarea>
+				<textarea class="textarea" name="description" placeholder="Description of the list">{ list.Description }</textarea>
 			</div>
 		</div>
 		<div class="field is-grouped">

@@ -20,9 +20,12 @@ func RegisterListEndpoints(mux *chi.Mux, db *sql.DB) {
 
 		r.Route("/list", func(chi chi.Router) {
 			chi.Get("/add", addView)
-			chi.Get("/cards", cards(repo))
-			chi.Get("/edit", editList(repo))
 			chi.Post("/add", addViewPost(repo))
+
+			chi.Get("/cards", cards(repo))
+
+			chi.Get("/{id}/edit", editList(repo))
+			chi.Post("/{id}/edit", editViewPost(repo))
 
 			chi.Delete("/{id}", deleteList(repo))
 		})
@@ -42,9 +45,18 @@ func editList(repo ListRepository) func(w http.ResponseWriter, r *http.Request) 
 		user := r.Context().Value("user").(users.User)
 		id, _ := strconv.Atoi(r.PathValue("id"))
 
-		list, _ := repo.GetList(id, user.Id)
+		list, err := repo.GetList(id, user.Id)
+		if err != nil {
+			log.Println("🤔 couldn't get list ", err)
+		}
 
-		view := list_pages.EditList(list)
+		cardModel := list_pages.EditCardModel{
+			Id:          list.Id,
+			Name:        list.Name,
+			Description: list.Description,
+		}
+
+		view := list_pages.EditList(cardModel)
 		authedLayout := layouts.Authed(view)
 		page := layouts.Layout(authedLayout)
 
@@ -103,10 +115,7 @@ func editViewPost(repo ListRepository) func(http.ResponseWriter, *http.Request) 
 		if err != nil {
 			log.Println("💥 Could not create list ", err)
 			return
-		} else {
-			log.Println("Created list for user", user.Id)
 		}
-
 		http.Redirect(w, r, "/profile", http.StatusFound)
 	}
 }
