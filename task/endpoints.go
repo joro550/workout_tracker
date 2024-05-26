@@ -24,6 +24,7 @@ func RegisterTaskEndpoints(mux *chi.Mux, db *sql.DB) {
 			chi.Delete("/{taskId}", deleteTask(taskRepo))
 
 			chi.Get("/cards", cards(taskRepo))
+			chi.Get("/type", taskType)
 
 			chi.Get("/add", taskAddView)
 			chi.Post("/add", taskAddPost(taskRepo))
@@ -88,6 +89,25 @@ func cards(repo TaskRepository) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
+func taskType(w http.ResponseWriter, r *http.Request) {
+	typeId, err := strconv.Atoi(r.FormValue("type"))
+	if err != nil {
+		log.Println("💥 Could not get typeId", err)
+	}
+
+	taskType := Type(typeId)
+	if WeightSetsAndReps == taskType {
+		view := task_pages.WeightSetsAndRepsTempl()
+		view.Render(r.Context(), w)
+		return
+	} else if TimePaceAndDistance == taskType {
+
+		view := task_pages.PaceAndTimeTempl()
+		view.Render(r.Context(), w)
+		return
+	}
+}
+
 func taskAddView(w http.ResponseWriter, r *http.Request) {
 	listId, _ := strconv.Atoi(r.PathValue("listId"))
 
@@ -105,8 +125,12 @@ func taskAddPost(repo TaskRepository) func(http.ResponseWriter, *http.Request) {
 			log.Println("💥 Could not get listId", err)
 		}
 
-		model := task_pages.AddTaskModelFromRequest(r)
-		_, err = repo.CreateTask(Task{ListId: listId, UserId: user.Id, Title: model.Title})
+		model, err := task_pages.AddTaskModelFromRequest(r)
+		if err != nil {
+			log.Println("💥 Could not get form information", err)
+			return
+		}
+		_, err = repo.CreateTask(Task{ListId: listId, UserId: user.Id, Title: model.Title, Value: model.Value})
 		if err != nil {
 			log.Println("💥 Could not create task", err)
 		}

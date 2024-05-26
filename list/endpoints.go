@@ -127,6 +127,7 @@ func deleteList(repo ListRepository) func(http.ResponseWriter, *http.Request) {
 		_ = repo.DeleteList(id, user.Id)
 
 		w.Header().Set("HX-Trigger", "list-updated")
+
 		w.WriteHeader(http.StatusOK)
 	}
 }

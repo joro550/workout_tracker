@@ -10,6 +10,9 @@ import "context"
 import "io"
 import "bytes"
 
+import "fmt"
+import "strconv"
+
 func Add(listId int) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
@@ -23,11 +26,50 @@ func Add(listId int) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1>Add task</h1><hr><form method=\"post\"><div class=\"field\"><label class=\"label\">Title</label><div class=\"control\"><input class=\"input\" name=\"title\" text=\"Title\"></div></div><div class=\"select\"><select name=\"type\"><option>None</option> <option>Weight sets and reps</option> <option>Pace And time</option></select></div><div id=\"type-reciever\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1>Add task</h1><hr><form method=\"post\"><div class=\"field\"><label class=\"label\">Title</label><div class=\"control\"><input class=\"input\" name=\"title\" text=\"Title\"></div></div><div class=\"field\"><label class=\"label\">Type</label><div class=\"select is-fullwidth\"><select name=\"type\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = WeightSetsAndReps().Render(ctx, templ_7745c5c3_Buffer)
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/list/%v/task/type", listId))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `task/pages/task.templ`, Line: 21, Col: 55}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-trigger=\"change\" hx-target=\"#type-reciever\" hx-swap=\"innerHTML\"><option value=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(WeightSetsAndReps))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `task/pages/task.templ`, Line: 26, Col: 52}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Weight sets and reps</option> <option value=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var4 string
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(TimePaceAndDistance))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `task/pages/task.templ`, Line: 27, Col: 54}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Pace And time</option></select></div></div><div id=\"type-reciever\" class=\"field\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = WeightSetsAndRepsTempl().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -50,16 +92,29 @@ func Edit() templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
+		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var5 == nil {
+			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1>Edit task</h1><hr><form method=\"post\"><div class=\"field\"><label class=\"label\">Title</label><div class=\"control\"><input class=\"input\" name=\"title\" text=\"Title\"></div></div><div class=\"select\"><select name=\"type\"><option>None</option> <option>Weight sets and reps</option> <option>Pace And time</option></select></div><div id=\"type-reciever\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1>Edit task</h1><hr><form method=\"post\"><div class=\"field\"><label class=\"label\">Title</label><div class=\"control\"><input class=\"input\" name=\"title\" text=\"Title\"></div></div><div class=\"field\"><label class=\"label\">Type</label><div><select class=\"select is-fullwidth\" name=\"type\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = WeightSetsAndReps().Render(ctx, templ_7745c5c3_Buffer)
+		var templ_7745c5c3_Var6 string
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/list/%v/task/type/", 1))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `task/pages/task.templ`, Line: 58, Col: 51}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-trigger=\"change\" hx-target=\"#type-reciever\" hx-swap=\"innerHTML\"><option>None</option> <option>Weight sets and reps</option> <option>Pace And time</option></select></div></div><div id=\"type-reciever\" class=\"field\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = WeightSetsAndRepsTempl().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -74,7 +129,7 @@ func Edit() templ.Component {
 	})
 }
 
-func WeightSetsAndReps() templ.Component {
+func WeightSetsAndRepsTempl() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -82,12 +137,12 @@ func WeightSetsAndReps() templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var3 == nil {
-			templ_7745c5c3_Var3 = templ.NopComponent
+		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var7 == nil {
+			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"field\"><label class=\"label\">Weight</label><div class=\"control\"><input class=\"input\" text=\"weight\"></div></div><div class=\"field\"><label class=\"label\">Sets</label><div class=\"control\"><input class=\"input\" text=\"sets\"></div></div><div class=\"field\"><label class=\"label\">Reps</label><div class=\"control\"><input class=\"input\" text=\"reps\"></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"field\"><label class=\"label\">Weight</label><div class=\"control\"><input class=\"input\" name=\"weight\" text=\"weight\"></div></div><div class=\"field\"><label class=\"label\">Sets</label><div class=\"control\"><input class=\"input\" name=\"sets\" text=\"sets\"></div></div><div class=\"field\"><label class=\"label\">Reps</label><div class=\"control\"><input class=\"input\" name=\"reps\" text=\"reps\"></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -98,7 +153,7 @@ func WeightSetsAndReps() templ.Component {
 	})
 }
 
-func PaceAndTime() templ.Component {
+func PaceAndTimeTempl() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -106,12 +161,12 @@ func PaceAndTime() templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var4 == nil {
-			templ_7745c5c3_Var4 = templ.NopComponent
+		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var8 == nil {
+			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"field\"><label class=\"label\">Pace</label><div class=\"control\"><input class=\"input\" text=\"pace\"></div></div><div class=\"field\"><label class=\"label\">Time</label><div class=\"control\"><input class=\"input\" text=\"time\"></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"field\"><label class=\"label\">Pace</label><div class=\"control\"><input class=\"input\" name=\"pace\" text=\"pace\"></div></div><div class=\"field\"><label class=\"label\">Time</label><div class=\"control\"><input class=\"input\" name=\"time\" text=\"time\"></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

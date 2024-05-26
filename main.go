@@ -38,6 +38,7 @@ func main() {
 	profile.RegisterProfileEndpoints(router, db)
 	list.RegisterListEndpoints(router, db)
 	task.RegisterTaskEndpoints(router, db)
+
 	log.Println("👂 listening")
 
 	http.ListenAndServe(":8080", router)

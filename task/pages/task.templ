@@ -1,5 +1,8 @@
 package task_pages
 
+import "fmt"
+import "strconv"
+
 templ Add(listId int) {
 	<h1>Add task</h1>
 	<hr/>
@@ -10,15 +13,23 @@ templ Add(listId int) {
 				<input class="input" name="title" text="Title"/>
 			</div>
 		</div>
-		<div class="select">
-			<select name="type">
-				<option>None</option>
-				<option>Weight sets and reps</option>
-				<option>Pace And time</option>
-			</select>
+		<div class="field">
+			<label class="label">Type</label>
+			<div class="select is-fullwidth">
+				<select
+					name="type"
+					hx-get={ fmt.Sprintf("/list/%v/task/type", listId) }
+					hx-trigger="change"
+					hx-target="#type-reciever"
+					hx-swap="innerHTML"
+				>
+					<option value={ strconv.Itoa(WeightSetsAndReps) }>Weight sets and reps</option>
+					<option value={ strconv.Itoa(TimePaceAndDistance) }>Pace And time</option>
+				</select>
+			</div>
 		</div>
-		<div id="type-reciever">
-			@WeightSetsAndReps()
+		<div id="type-reciever" class="field">
+			@WeightSetsAndRepsTempl()
 		</div>
 		<div class="field is-grouped">
 			<div class="control">
@@ -38,15 +49,25 @@ templ Edit() {
 				<input class="input" name="title" text="Title"/>
 			</div>
 		</div>
-		<div class="select">
-			<select name="type">
-				<option>None</option>
-				<option>Weight sets and reps</option>
-				<option>Pace And time</option>
-			</select>
+		<div class="field">
+			<label class="label">Type</label>
+			<div>
+				<select
+					class="select is-fullwidth"
+					name="type"
+					hx-get={ fmt.Sprintf("/list/%v/task/type/", 1) }
+					hx-trigger="change"
+					hx-target="#type-reciever"
+					hx-swap="innerHTML"
+				>
+					<option>None</option>
+					<option>Weight sets and reps</option>
+					<option>Pace And time</option>
+				</select>
+			</div>
 		</div>
-		<div id="type-reciever">
-			@WeightSetsAndReps()
+		<div id="type-reciever" class="field">
+			@WeightSetsAndRepsTempl()
 		</div>
 		<div class="field is-grouped">
 			<div class="control">
@@ -56,38 +77,38 @@ templ Edit() {
 	</form>
 }
 
-templ WeightSetsAndReps() {
+templ WeightSetsAndRepsTempl() {
 	<div class="field">
 		<label class="label">Weight</label>
 		<div class="control">
-			<input class="input" text="weight"/>
+			<input class="input" name="weight" text="weight"/>
 		</div>
 	</div>
 	<div class="field">
 		<label class="label">Sets</label>
 		<div class="control">
-			<input class="input" text="sets"/>
+			<input class="input" name="sets" text="sets"/>
 		</div>
 	</div>
 	<div class="field">
 		<label class="label">Reps</label>
 		<div class="control">
-			<input class="input" text="reps"/>
+			<input class="input" name="reps" text="reps"/>
 		</div>
 	</div>
 }
 
-templ PaceAndTime() {
+templ PaceAndTimeTempl() {
 	<div class="field">
 		<label class="label">Pace</label>
 		<div class="control">
-			<input class="input" text="pace"/>
+			<input class="input" name="pace" text="pace"/>
 		</div>
 	</div>
 	<div class="field">
 		<label class="label">Time</label>
 		<div class="control">
-			<input class="input" text="time"/>
+			<input class="input" name="time" text="time"/>
 		</div>
 	</div>
 }
