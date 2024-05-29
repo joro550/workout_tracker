@@ -33,6 +33,7 @@ func main() {
 
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
+	hello
 
 	users.RegisterUserEndpoints(router, db)
 	profile.RegisterProfileEndpoints(router, db)
