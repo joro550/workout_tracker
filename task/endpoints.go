@@ -47,12 +47,25 @@ func taskView(repo TaskRepository) func(http.ResponseWriter, *http.Request) {
 
 		var taskList []task_pages.TaskModel
 		for _, task := range tasks {
-			taskList = append(taskList, task_pages.TaskModel{
+			taskModel := task_pages.TaskModel{
 				Id:    task.Id,
 				Value: task.Value,
 				Title: task.Title,
 				Date:  task.Date,
-			})
+				Type:  int(task.Type),
+			}
+
+			switch task.Type {
+			case WeightSetsAndReps:
+				mod := task_pages.WeightSetsAndRepsFromModel(task.Value)
+				taskModel.TaskTable = mod.ToTable()
+
+			case TimePaceAndDistance:
+				mod := task_pages.TimePaceAndDistanceFromModel(task.Value)
+				taskModel.TaskTable = mod.ToTable()
+			}
+
+			taskList = append(taskList, taskModel)
 		}
 
 		cardView := task_pages.ListTasks(listId, taskList)

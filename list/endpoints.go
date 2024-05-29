@@ -48,6 +48,7 @@ func editList(repo ListRepository) func(w http.ResponseWriter, r *http.Request) 
 		list, err := repo.GetList(id, user.Id)
 		if err != nil {
 			log.Println("🤔 couldn't get list ", err)
+			http.Redirect(w, r, "/profile", http.StatusFound)
 		}
 
 		cardModel := list_pages.EditCardModel{

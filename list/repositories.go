@@ -54,11 +54,10 @@ func (lr ListRepository) DeleteList(listId, userId int) bool {
 }
 
 func (lr ListRepository) GetList(listId, userId int) (List, error) {
-	row := lr.db.QueryRow("select id, name, description, userid from list where id = id and userid = ?",
+	row := lr.db.QueryRow("select id, name, description, userid from list where id = ? and userid = ?",
 		listId, userId)
 
 	var list List
-
 	err := row.Scan(&list.Id, &list.Name, &list.Description, &list.UserId)
 	return list, err
 }
@@ -69,6 +68,7 @@ func (lr ListRepository) GetAllLists(userId int) ([]List, error) {
 		log.Println("🤔 [GetAllLists] query failed", err)
 		return []List{}, nil
 	}
+	defer rows.Close()
 
 	var lists []List
 

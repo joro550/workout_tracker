@@ -15,6 +15,24 @@ templ Cards(listId int, models []TaskModel) {
 			</header>
 			<div class="card-content">
 				<div class="content">
+					<table class="table">
+						<thead>
+							<tr>
+								for _, header := range card.TaskTable.Headers {
+									<th>{ header }</th>
+								}
+							</tr>
+						</thead>
+						<tbody>
+							for _, row := range card.TaskTable.Rows {
+								<tr>
+									for _, value := range row.Value {
+										<td>{ value }</td>
+									}
+								</tr>
+							}
+						</tbody>
+					</table>
 					{ card.Value }
 				</div>
 			</div>

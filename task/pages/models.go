@@ -12,11 +12,22 @@ const (
 	TimePaceAndDistance
 )
 
+type TaskTable struct {
+	Headers []string
+	Rows    []TaskRow
+}
+
+type TaskRow struct {
+	Value []string
+}
+
 type TaskModel struct {
-	Title string
-	Date  time.Time
-	Value string
-	Id    int
+	Title     string
+	Date      time.Time
+	Value     string
+	Type      int
+	Id        int
+	TaskTable TaskTable
 }
 
 type AddTaskModel struct {
@@ -34,6 +45,44 @@ type WeightSetsAndRepsModel struct {
 type TimePaceAndDistanceModel struct {
 	Pace string
 	Time string
+}
+
+func (model WeightSetsAndRepsModel) ToTable() TaskTable {
+	table := TaskTable{
+		Headers: []string{"Weight", "Reps", "Sets"},
+		Rows: []TaskRow{
+			{[]string{strconv.Itoa(model.Weight), strconv.Itoa(model.Reps), strconv.Itoa(model.Sets)}},
+		},
+	}
+	return table
+}
+
+func (model TimePaceAndDistanceModel) ToTable() TaskTable {
+	table := TaskTable{
+		Headers: []string{"Pace", "Time"},
+		Rows: []TaskRow{
+			{[]string{model.Pace, model.Time}},
+		},
+	}
+	return table
+}
+
+func WeightSetsAndRepsFromModel(value string) WeightSetsAndRepsModel {
+	model := WeightSetsAndRepsModel{}
+	err := json.Unmarshal([]byte(value), &model)
+	if err != nil {
+		return WeightSetsAndRepsModel{}
+	}
+	return model
+}
+
+func TimePaceAndDistanceFromModel(value string) TimePaceAndDistanceModel {
+	model := TimePaceAndDistanceModel{}
+	err := json.Unmarshal([]byte(value), &model)
+	if err != nil {
+		return TimePaceAndDistanceModel{}
+	}
+	return model
 }
 
 func WeightSetsAndRepsFromRequest(r *http.Request) (WeightSetsAndRepsModel, error) {
@@ -85,7 +134,6 @@ func AddTaskModelFromRequest(r *http.Request) (AddTaskModel, error) {
 			return AddTaskModel{}, err
 		}
 		value = string(valueBytes)
-		break
 	case TimePaceAndDistance:
 		model := TimePaceAndDistanceFromRequest(r)
 
