@@ -12,6 +12,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/joro550/workout_tracker/home"
 	"github.com/joro550/workout_tracker/list"
 	"github.com/joro550/workout_tracker/migrations"
 	"github.com/joro550/workout_tracker/profile"
@@ -46,6 +47,7 @@ func main() {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 
+	home.RegisterHomeEndpoints(router)
 	users.RegisterUserEndpoints(router, db)
 	profile.RegisterProfileEndpoints(router, db)
 	list.RegisterListEndpoints(router, db)
