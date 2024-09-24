@@ -5,7 +5,7 @@ go 1.22.2
 require github.com/go-chi/chi v1.5.5
 
 require (
-	github.com/a-h/templ v0.2.697 // indirect
+	github.com/a-h/templ v0.2.778 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/go-chi/chi/v5 v5.0.12 // indirect
 	github.com/go-chi/jwtauth/v5 v5.3.1 // indirect
@@ -25,5 +25,5 @@ require (
 	github.com/segmentio/asm v1.2.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	golang.org/x/crypto v0.23.0 // indirect
-	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/sys v0.23.0 // indirect
 )
