@@ -21,13 +21,13 @@ import (
 
 func main() {
 	log.Println("🟩 Starting")
+
 	workDirectory, err := os.Getwd()
 	if err != nil {
 		log.Println("💥 Could not get working directory", err)
 	}
 
 	path := path.Join(workDirectory, "data")
-
 	os.MkdirAll(path, 0755)
 
 	dbFile := fmt.Sprintf("file:%s/workout_tracker.db", path)
