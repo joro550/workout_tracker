@@ -2,8 +2,11 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"path"
 
 	_ "github.com/mattn/go-sqlite3"
 
@@ -18,8 +21,17 @@ import (
 
 func main() {
 	log.Println("🟩 Starting")
+	workDirectory, err := os.Getwd()
+	if err != nil {
+		log.Println("💥 Could not get working directory", err)
+	}
 
-	db, err := sql.Open("sqlite3", "file:workout_tracker.db")
+	path := path.Join(workDirectory, "data")
+
+	os.MkdirAll(path, 0755)
+
+	dbFile := fmt.Sprintf("file:%s/workout_tracker.db", path)
+	db, err := sql.Open("sqlite3", dbFile)
 	if err != nil {
 		log.Fatalln("💥 Could not connect to database", err)
 	}
